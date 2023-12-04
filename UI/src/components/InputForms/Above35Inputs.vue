@@ -57,11 +57,19 @@
     },
     data() {
       return {
+        responseData: null,
+        PrelimInfo: {
+          age: '',
+          gender: '',
+          trestbps: '',
+          has_history: '',
+          cp: ''
+        },
         chol: '',
         fbs: '',
         restecg: '',
         thalach: '',
-        thal: ''
+        thal: '',
       };
     },
     methods: {
@@ -69,6 +77,11 @@
         try {
           const url = 'http://127.0.0.1:5000/Above35'; // Update the API endpoint here
           const response = await axios.post(url, {
+            age: this.PrelimInfo.age,
+            gender: this.PrelimInfo.gender,
+            trestbps: this.PrelimInfo.trestbps,
+            has_history: this.PrelimInfo.has_history,
+            cp: this.PrelimInfo.cp,
             chol: this.chol,
             fbs: this.fbs,
             restecg: this.restecg,
@@ -80,6 +93,7 @@
 
           if (response.status === 200) {
             console.log('Request successful:', response.data);
+            this.responseData = response.data;
           } else {
             console.error('Request failed:', response.data);
             alert('Request failed:' + response.data.message);
@@ -87,9 +101,17 @@
         } catch (error) {
           console.error('Request failed:', error.message);
         }
-      }
-
+        if ((this.responseData.above_svm_probability - this.responseData.pre_svm_probability) >= 10){
+          this.$router.push("/MainResult1");
+        }
+        else{
+          this.$router.push("/MainResult0");
+        }
+      },
     },
+    mounted() {
+      this.PrelimInfo = JSON.parse(localStorage.getItem('PrelimInfo'))
+    }
   };
 </script>
 

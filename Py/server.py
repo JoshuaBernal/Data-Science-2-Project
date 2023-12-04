@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
-from python_code import LogisticRegPre, KNNPre, SVMPre, LogisticRegAbove35, KNNAbove35, SVMAbove35
+from python_code import LogisticRegPre, KNNPre, SVMPre, LogisticRegAbove35, KNNAbove35, SVMAbove35, LogisticRegBelow35, KNNBelow35, SVMBelow35
 
 
 app = Flask(__name__)
@@ -17,105 +17,142 @@ def preliminary_predict():
     has_history = data["has_history"]
     cp = data["cp"]
 
-    session['preliminary_inputs'] = {
-        'age': age,
-        'gender': gender,
-        'trestbps': trestbps,
-        'has_history': has_history,
-        'cp': cp
-    }
+    pre_logreg_predictions, pre_logreg_probability, pre_logreg_accuracy, pre_logreg_conf_matrix, pre_logreg_precision, pre_logreg_f1, pre_logreg_recall, pre_logreg_mse, pre_logreg_rmse = LogisticRegPre(age, gender, trestbps, has_history, cp)
 
-    logreg_predictions, logreg_probability, logreg_accuracy, logreg_conf_matrix, logreg_precision, logreg_f1, logreg_recall, logreg_mse, logreg_rmse = LogisticRegPre(age, gender, trestbps, has_history, cp)
+    pre_knn_predictions, pre_knn_probability, pre_knn_accuracy, pre_knn_conf_matrix, pre_knn_precision, pre_knn_f1, pre_knn_recall, pre_knn_mse, pre_knn_rmse = KNNPre(age, gender, trestbps, has_history, cp)
 
-    knn_predictions, knn_probability, knn_accuracy, knn_conf_matrix, knn_precision, knn_f1, knn_recall, knn_mse, knn_rmse = KNNPre(age, gender, trestbps, has_history, cp)
-
-    svm_predictions, svm_probability, svm_accuracy, svm_conf_matrix, svm_precision, svm_f1, svm_recall, svm_mse, svm_rmse = SVMPre(age, gender, trestbps, has_history, cp)
+    pre_svm_predictions, pre_svm_probability, pre_svm_accuracy, pre_svm_conf_matrix, pre_svm_precision, pre_svm_f1, pre_svm_recall, pre_svm_mse, pre_svm_rmse = SVMPre(age, gender, trestbps, has_history, cp)
 
     return jsonify({
-        'logreg_predictions': logreg_predictions.tolist(), 
-        'logreg_probability': logreg_probability.tolist(),
-        'logreg_accuracy': logreg_accuracy.tolist(),
-        'logreg_conf_matrix': logreg_conf_matrix.tolist(),
-        'logreg_precision': logreg_precision.tolist(),
-        'logreg_f1': logreg_f1.tolist(), 
-        'logreg_recall': logreg_recall.tolist(), 
-        'logreg_mse': logreg_mse.tolist(), 
-        'logreg_rmse': logreg_rmse.tolist(),
-        'knn_predictions': knn_predictions.tolist(), 
-        'knn_probability': knn_probability.tolist(),
-        'knn_accuracy': knn_accuracy.tolist(),
-        'knn_conf_matrix': knn_conf_matrix.tolist(),
-        'knn_precision': knn_precision.tolist(),
-        'knn_f1': knn_f1.tolist(), 
-        'knn_recall': knn_recall.tolist(), 
-        'knn_mse': knn_mse.tolist(), 
-        'knn_rmse': knn_rmse.tolist(),
-        'svm_predictions': svm_predictions.tolist(), 
-        'svm_probability': svm_probability.tolist(),
-        'svm_accuracy': svm_accuracy.tolist(),
-        'svm_conf_matrix': svm_conf_matrix.tolist(),
-        'svm_precision': svm_precision.tolist(),
-        'svm_f1': svm_f1.tolist(), 
-        'svm_recall': svm_recall.tolist(), 
-        'svm_mse': svm_mse.tolist(), 
-        'svm_rmse': svm_rmse.tolist()
+        'pre_logreg_predictions': pre_logreg_predictions.tolist(), 
+        'pre_logreg_probability': pre_logreg_probability.tolist(),
+        'pre_logreg_accuracy': pre_logreg_accuracy.tolist(),
+        'pre_logreg_conf_matrix': pre_logreg_conf_matrix.tolist(),
+        'pre_logreg_precision': pre_logreg_precision.tolist(),
+        'pre_logreg_f1': pre_logreg_f1.tolist(), 
+        'pre_logreg_recall': pre_logreg_recall.tolist(), 
+        'pre_logreg_mse': pre_logreg_mse.tolist(), 
+        'pre_logreg_rmse': pre_logreg_rmse.tolist(),
+        'pre_knn_predictions': pre_knn_predictions.tolist(), 
+        'pre_knn_probability': pre_knn_probability.tolist(),
+        'pre_knn_accuracy': pre_knn_accuracy.tolist(),
+        'pre_knn_conf_matrix': pre_knn_conf_matrix.tolist(),
+        'pre_knn_precision': pre_knn_precision.tolist(),
+        'pre_knn_f1': pre_knn_f1.tolist(), 
+        'pre_knn_recall': pre_knn_recall.tolist(), 
+        'pre_knn_mse': pre_knn_mse.tolist(), 
+        'pre_knn_rmse': pre_knn_rmse.tolist(),
+        'pre_svm_predictions': pre_svm_predictions.tolist(), 
+        'pre_svm_probability': pre_svm_probability.tolist(),
+        'pre_svm_accuracy': pre_svm_accuracy.tolist(),
+        'pre_svm_conf_matrix': pre_svm_conf_matrix.tolist(),
+        'pre_svm_precision': pre_svm_precision.tolist(),
+        'pre_svm_f1': pre_svm_f1.tolist(), 
+        'pre_svm_recall': pre_svm_recall.tolist(), 
+        'pre_svm_mse': pre_svm_mse.tolist(), 
+        'pre_svm_rmse': pre_svm_rmse.tolist()
     })
+
 
 @app.route("/Above35", methods=["POST"])
 def above35_predict():
     data = request.get_json(force=True)
+    age = data["age"]
+    gender = data["gender"]
+    trestbps = data["trestbps"]
+    has_history = data["has_history"]
+    cp = data["cp"]
     chol = data["chol"]
     fbs = data["fbs"]
     restecg = data["restecg"]
     thalach = data["thalach"]
     thal = data["thal"]
 
-    preliminary_inputs = session.get('preliminary_inputs', {})
-    
-    # Check if preliminary inputs are available
-    if not preliminary_inputs:
-        return jsonify({'error': 'Preliminary inputs not found. Please complete the first step.'})
+    above_logreg_predictions, above_logreg_probability, above_logreg_accuracy, above_logreg_conf_matrix, above_logreg_precision, above_logreg_f1, above_logreg_recall, above_logreg_mse, above_logreg_rmse = LogisticRegAbove35(age, gender, trestbps, has_history, cp, chol, fbs, restecg, thalach, thal)
 
-    # Combine preliminary and additional inputs for Above35 prediction
-    combined_inputs = {**preliminary_inputs, 'chol': chol, 'fbs': fbs, 'restecg': restecg, 'thalach': thalach, 'thal': thal}
+    above_knn_predictions, above_knn_probability, above_knn_accuracy, above_knn_conf_matrix, above_knn_precision, above_knn_f1, above_knn_recall, above_knn_mse, above_knn_rmse = KNNAbove35(age, gender, trestbps, has_history, cp, chol, fbs, restecg, thalach, thal)
 
-
-
-    logreg_predictions, logreg_probability, logreg_accuracy, logreg_conf_matrix, logreg_precision, logreg_f1, logreg_recall, logreg_mse, logreg_rmse = LogisticRegAbove35(combined_inputs)
-
-    knn_predictions, knn_probability, knn_accuracy, knn_conf_matrix, knn_precision, knn_f1, knn_recall, knn_mse, knn_rmse = KNNAbove35(combined_inputs)
-
-    svm_predictions, svm_probability, svm_accuracy, svm_conf_matrix, svm_precision, svm_f1, svm_recall, svm_mse, svm_rmse = SVMAbove35(combined_inputs)
+    above_svm_predictions, above_svm_probability, above_svm_accuracy, above_svm_conf_matrix, above_svm_precision, above_svm_f1, above_svm_recall, above_svm_mse, above_svm_rmse = SVMAbove35(age, gender, trestbps, has_history, cp, chol, fbs, restecg, thalach, thal)
 
     return jsonify({
-        'logreg_predictions': logreg_predictions.tolist(), 
-        'logreg_probability': logreg_probability.tolist(),
-        'logreg_accuracy': logreg_accuracy.tolist(),
-        'logreg_conf_matrix': logreg_conf_matrix.tolist(),
-        'logreg_precision': logreg_precision.tolist(),
-        'logreg_f1': logreg_f1.tolist(), 
-        'logreg_recall': logreg_recall.tolist(), 
-        'logreg_mse': logreg_mse.tolist(), 
-        'logreg_rmse': logreg_rmse.tolist(),
-        'knn_predictions': knn_predictions.tolist(), 
-        'knn_probability': knn_probability.tolist(),
-        'knn_accuracy': knn_accuracy.tolist(),
-        'knn_conf_matrix': knn_conf_matrix.tolist(),
-        'knn_precision': knn_precision.tolist(),
-        'knn_f1': knn_f1.tolist(), 
-        'knn_recall': knn_recall.tolist(), 
-        'knn_mse': knn_mse.tolist(), 
-        'knn_rmse': knn_rmse.tolist(),
-        'svm_predictions': svm_predictions.tolist(), 
-        'svm_probability': svm_probability.tolist(),
-        'svm_accuracy': svm_accuracy.tolist(),
-        'svm_conf_matrix': svm_conf_matrix.tolist(),
-        'svm_precision': svm_precision.tolist(),
-        'svm_f1': svm_f1.tolist(), 
-        'svm_recall': svm_recall.tolist(), 
-        'svm_mse': svm_mse.tolist(), 
-        'svm_rmse': svm_rmse.tolist()
+        'above_logreg_predictions': above_logreg_predictions.tolist(), 
+        'above_logreg_probability': above_logreg_probability.tolist(),
+        'above_logreg_accuracy': above_logreg_accuracy.tolist(),
+        'above_logreg_conf_matrix': above_logreg_conf_matrix.tolist(),
+        'above_logreg_precision': above_logreg_precision.tolist(),
+        'above_logreg_f1': above_logreg_f1.tolist(), 
+        'above_logreg_recall': above_logreg_recall.tolist(), 
+        'above_logreg_mse': above_logreg_mse.tolist(), 
+        'above_logreg_rmse': above_logreg_rmse.tolist(),
+        'above_knn_predictions': above_knn_predictions.tolist(), 
+        'above_knn_probability': above_knn_probability.tolist(),
+        'above_knn_accuracy': above_knn_accuracy.tolist(),
+        'above_knn_conf_matrix': above_knn_conf_matrix.tolist(),
+        'above_knn_precision': above_knn_precision.tolist(),
+        'above_knn_f1': above_knn_f1.tolist(), 
+        'above_knn_recall': above_knn_recall.tolist(), 
+        'above_knn_mse': above_knn_mse.tolist(), 
+        'above_knn_rmse': above_knn_rmse.tolist(),
+        'above_svm_predictions': above_svm_predictions.tolist(), 
+        'above_svm_probability': above_svm_probability.tolist(),
+        'above_svm_accuracy': above_svm_accuracy.tolist(),
+        'above_svm_conf_matrix': above_svm_conf_matrix.tolist(),
+        'above_svm_precision': above_svm_precision.tolist(),
+        'above_svm_f1': above_svm_f1.tolist(), 
+        'above_svm_recall': above_svm_recall.tolist(), 
+        'above_svm_mse': above_svm_mse.tolist(), 
+        'above_svm_rmse': above_svm_rmse.tolist()
     })
+
+
+@app.route("/Below35", methods=["POST"])
+def below35_predict():
+    data = request.get_json(force=True)
+    age = data["age"]
+    gender = data["gender"]
+    trestbps = data["trestbps"]
+    has_history = data["has_history"]
+    cp = data["cp"]
+    chol = data["chol"]
+    fbs = data["fbs"]
+    restecg = data["restecg"]
+
+    below_logreg_predictions, below_logreg_probability, below_logreg_accuracy, below_logreg_conf_matrix, below_logreg_precision, below_logreg_f1, below_logreg_recall, below_logreg_mse, below_logreg_rmse = LogisticRegBelow35(age, gender, trestbps, has_history, cp, chol, fbs, restecg)
+
+    below_knn_predictions, below_knn_probability, below_knn_accuracy, below_knn_conf_matrix, below_knn_precision, below_knn_f1, below_knn_recall, below_knn_mse, below_knn_rmse = KNNBelow35(age, gender, trestbps, has_history, cp, chol, fbs, restecg)
+
+    below_svm_predictions, below_svm_probability, below_svm_accuracy, below_svm_conf_matrix, below_svm_precision, below_svm_f1, below_svm_recall, below_svm_mse, below_svm_rmse = SVMBelow35(age, gender, trestbps, has_history, cp, chol, fbs, restecg)
+
+    return jsonify({
+        'below_logreg_predictions': below_logreg_predictions.tolist(), 
+        'below_logreg_probability': below_logreg_probability.tolist(),
+        'below_logreg_accuracy': below_logreg_accuracy.tolist(),
+        'below_logreg_conf_matrix': below_logreg_conf_matrix.tolist(),
+        'below_logreg_precision': below_logreg_precision.tolist(),
+        'below_logreg_f1': below_logreg_f1.tolist(), 
+        'below_logreg_recall': below_logreg_recall.tolist(), 
+        'below_logreg_mse': below_logreg_mse.tolist(), 
+        'below_logreg_rmse': below_logreg_rmse.tolist(),
+        'below_knn_predictions': below_knn_predictions.tolist(), 
+        'below_knn_probability': below_knn_probability.tolist(),
+        'below_knn_accuracy': below_knn_accuracy.tolist(),
+        'below_knn_conf_matrix': below_knn_conf_matrix.tolist(),
+        'below_knn_precision': below_knn_precision.tolist(),
+        'below_knn_f1': below_knn_f1.tolist(), 
+        'below_knn_recall': below_knn_recall.tolist(), 
+        'below_knn_mse': below_knn_mse.tolist(), 
+        'below_knn_rmse': below_knn_rmse.tolist(),
+        'below_svm_predictions': below_svm_predictions.tolist(), 
+        'below_svm_probability': below_svm_probability.tolist(),
+        'below_svm_accuracy': below_svm_accuracy.tolist(),
+        'below_svm_conf_matrix': below_svm_conf_matrix.tolist(),
+        'below_svm_precision': below_svm_precision.tolist(),
+        'below_svm_f1': below_svm_f1.tolist(), 
+        'below_svm_recall': below_svm_recall.tolist(), 
+        'below_svm_mse': below_svm_mse.tolist(), 
+        'below_svm_rmse': below_svm_rmse.tolist()
+    })
+
 
 if __name__ == "__main__":
     app.run(debug=True)

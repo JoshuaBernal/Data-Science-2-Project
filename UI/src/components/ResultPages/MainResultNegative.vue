@@ -21,12 +21,12 @@
       <div class="float-container">
         <div class="float-child">
         <div class="col-12 col-md-8 col-lg-6 col-xl-12">
-            <button @click="handleSubmit" class="btn form-floating btn-lg px-5" type="submit">View Visualization Reports</button>
+            <button @click="goToVisualization" class="btn form-floating btn-lg px-5" type="navigate">View Visualization Report</button>
         </div>
         </div>
         <div class="col-12 col-md-8 col-lg-6 col-xl-12">
         <div class="float-child">
-            <button @click="handleSubmit" class="btn form-floating btn-lg px-5" type="submit">View Printable Ticket</button>
+            <button @click="goToTicketPage" class="btn form-floating btn-lg px-5" type="navigate">View Patient Ticket</button>
         </div>
       </div>
       </div>
@@ -35,68 +35,22 @@
 </section> 
 </template>
 <script>
-  import { ref, onMounted } from "vue";
-  import { MDBNavbar } from 'mdb-vue-ui-kit';
-  import { useRouter } from 'vue-router';
+//import { ref } from "vue";
+import { MDBNavbar } from 'mdb-vue-ui-kit';
 
-  export default {
-    components: {
-      MDBNavbar
+export default {
+  components: {
+    MDBNavbar
+  },
+  methods: {
+    goToVisualization() {
+      this.$router.push("/VisualizationReport");
     },
-    setup() {
-      const email = ref('');
-      const password = ref('');
-      const checkbox2 = ref(false);
-      const router = useRouter();
-
-      onMounted(() => {
-        const rememberMePreference = localStorage.getItem('rememberMe');
-
-        if (rememberMePreference === 'true') {
-          checkbox2.value = true;
-        }
-      });
-
-      const handleSubmit = async () => {
-        try {
-          const url = 'http://localhost:8081/auth/login'; // Update the API endpoint here
-          const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              email: email.value,
-              password: password.value,
-            }),
-          });
-          const data = await response.json();
-          if (response.ok) {
-            console.log('Login successful:', data);
-            document.cookie = `token=${data.token}; expires=${new Date(data.expiresIn)}`;
-      
-            // Redirect to appropriate component based on role
-            if (data.role === 'seniorCitizen') {
-              router.push({ name: 'SeniorDashboard'});
-            } else if (data.role === 'guardian') {
-              router.push({ name: 'GuardianDashboard' });
-            } else if (data.role === 'admin') {
-              router.push({ name: 'OfficeDashboard' });
-            }
-          } else {
-            console.error('Login failed:', data);
-            alert('Login failed:' + data.message);
-          }
-        } catch (error) {
-          console.error('Login failed:', error.message);
-        }
-      };
-
-      return {
-        handleSubmit
-      };
-    },
-  };
+    goToTicketPage() {
+      this.$router.push("/PrintableTicket");
+    }
+  },
+};
 </script>
 
 
