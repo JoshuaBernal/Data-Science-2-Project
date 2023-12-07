@@ -10,7 +10,6 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import PreliminaryInputs from './components/InputForms/PreliminaryInputs.vue'
 import Above35Inputs from './components/InputForms/Above35Inputs'
 import Below35Inputs from './components/InputForms/Below35Inputs'
-import LandingPage from './components/LandingPage/LandingPage.vue'
 import MainResultPositive from './components/ResultPages/MainResultPositive.vue'
 import MainResultNegative from './components/ResultPages/MainResultNegative.vue'
 import PrintableTicket from './components/ResultPages/PrintableTicket.vue'
@@ -20,10 +19,6 @@ import VisualizationReport from './components/ResultPages/VisualizationReport.vu
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/Landing',
-    name: 'LandingPage', 
-    component: LandingPage
-    },
     { path: '/MainResult0',
     name: 'MainResultNegative', 
     component: MainResultNegative
