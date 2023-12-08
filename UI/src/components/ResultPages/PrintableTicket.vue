@@ -5,13 +5,19 @@
     </router-link>
   </MDBNavbar>
 
-<section class="vh-100 gradient-custom">
-  <div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
+<section class="vh-100">
+  <aside class="container py-5 h-100">
+    <aside class="row d-flex justify-content-center align-items-center h-100">
       <h2 class="fw-bold mb-2 text-uppercase">Patient Information Ticket</h2>
       <hr class="solid">
-      <h5 class="fw-regular mb-2">Preview goes here.</h5>
-      <div class="float-container">
+        <div class="print-area">
+          <p>{{ PatientInfo.name }}</p>
+          <p>wswswsws</p>
+        </div>
+        <div class="col-12 col-md-8 col-lg-6 col-xl-12">
+            <button id="print" @click="printPage" class="btn form-floating btn-lg px-5" type="button">Print</button>
+        </div>
+      <aside class="float-container">
         <div class="float-child">
         <div class="col-12 col-md-8 col-lg-6 col-xl-12">
             <button @click="goToVisualization" class="btn form-floating btn-lg px-5" type="navigate">View Visualization Report</button>
@@ -22,9 +28,9 @@
             <button @click="startOver" class="btn form-floating btn-lg px-5" type="navigate">+ New Patient</button>
         </div>
         </div>
-      </div>
-    </div>
-  </div>
+      </aside>
+    </aside>
+  </aside>
 </section> 
 </template>
 
@@ -37,18 +43,28 @@
     components: {
       MDBNavbar
     },
+    data() {
+      return {
+        PatientInfo: {
+          name: '',
+          number: ''
+        }
+      }
+    },
     methods: {
-    startOver() {
-      this.$router.push("/");
-    },
-    printTicket() {
-      //show print ticket ui here
-      console.log("wow! it works.")
-    },
-    goToVisualization() {
-      this.$router.push("/VisualizationReport")
-    }
-  },
+      startOver() {
+        this.$router.push("/");
+        },
+      printPage() {
+        window.print();
+        },
+      goToVisualization() {
+        this.$router.push("/VisualizationReport")
+        }
+      },
+      mounted() {
+          this.PatientInfo = JSON.parse(localStorage.getItem('PatientInfo'))
+        }
 };
 </script>
 
@@ -72,9 +88,6 @@
   font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   box-shadow: none;
 }
-.gradient-custom {
-  background: color(srgb rgb(255, 255, 255) rgb(255, 255, 255) rgb(255, 255, 255))
-}
 .btn {
   border-radius: 50px;
   background-color: #ffca7b;
@@ -83,5 +96,13 @@
 }
 hr.solid {
   border-top: 3px solid #000000;
+}
+@media print{
+  body * {
+    display:none;
+  }
+  .print-area, .print-area * {
+    display:block;
+  }
 }
 </style>

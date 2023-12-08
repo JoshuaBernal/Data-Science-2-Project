@@ -15,24 +15,32 @@
         <div class="float-child">
         <div class="col-12 col-md-8 col-lg-6 col-xl-12">
                 <div class="form-floating mb-3">
+                  <input type="patientno" class="form-control" id="idFloatingInput" placeholder="e.g. 29" v-model="PatientInfo.number">
+                  <label for="floatingInput">Patient No.</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <input type="name" class="form-control" id="nameFloatingInput" placeholder="e.g. 29" v-model="PatientInfo.name">
+                  <label for="floatingInput">Name</label>
+                </div>
+                <div class="form-floating mb-3">
                   <input type="age" class="form-control" id="ageFloatingInput" placeholder="e.g. 29" v-model="PrelimInfo.age">
                   <label for="floatingInput">Age</label>
                 </div>
                 <div class="form-floating mb-3">
                   <input type="gender" class="form-control" id="genderFloatingInput" placeholder="Male or Female" v-model="PrelimInfo.gender">
-                  <label for="floatingInput">Sex (M or F)</label>
-                </div>
-                <div class="form-floating mb-3">
-                  <input type="trestbps" class="form-control" id="trestbpsFloatingInput" placeholder="e.g. 145" v-model="PrelimInfo.trestbps">
-                  <label for="floatingInput">Resting Heart Rate in mm Hg</label>
+                  <label for="floatingInput">Sex (1 for Male, 0 for Female)</label>
                 </div>
         </div>        
         </div>
         <div class="float-child">
         <div class="col-12 col-md-8 col-lg-6 col-xl-12">
                 <div class="form-floating mb-3">
+                  <input type="trestbps" class="form-control" id="trestbpsFloatingInput" placeholder="e.g. 145" v-model="PrelimInfo.trestbps">
+                  <label for="floatingInput">Resting Heart Rate in mm Hg</label>
+                </div>
+                <div class="form-floating mb-3">
                   <input type="has_history" class="form-control" id="histFfloatingInput" placeholder="Yes or No" v-model="PrelimInfo.has_history">
-                  <label for="floatingInput">Has History of Heart Attack (Yes or No)</label>
+                  <label for="floatingInput">Has History of Heart Attack (1 for Yes, 0 for No)</label>
                 </div>
                 <div class="form-floating mb-3">
                   <input type="cp" class="form-control" id="cpFloatingInput" placeholder="e.g. 2" v-model="PrelimInfo.cp">
@@ -106,6 +114,10 @@ export default {
         trestbps: '',
         has_history: '',
         cp: ''
+      },
+      PatientInfo: {
+        number: '',
+        name: ''
       }
     };
   },
@@ -133,6 +145,7 @@ export default {
           console.log('Request successful', response.data)
           this.responseData = response.data;
           localStorage.setItem('PrelimInfo', JSON.stringify(this.PrelimInfo))
+          localStorage.setItem('PatientInfo', JSON.stringify(this.PatientInfo))
         } else {
           console.error('Request failed:', response.data);
           alert('Request failed:' + response.data.message);
