@@ -39,6 +39,7 @@
     methods: {
     startOver() {
       this.$router.push("/");
+      localStorage.clear();
     },
     goToTicket() {
       this.$router.push("/PrintableTicket")

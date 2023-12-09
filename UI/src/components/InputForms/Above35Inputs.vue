@@ -94,6 +94,8 @@
           if (response.status === 200) {
             console.log('Request successful:', response.data);
             this.responseData = response.data;
+            localStorage.setItem('responseData', JSON.stringify(this.responseData))
+            //console.log(this.responseData.above_svm_probability);
           } else {
             console.error('Request failed:', response.data);
             alert('Request failed:' + response.data.message);
@@ -101,7 +103,7 @@
         } catch (error) {
           console.error('Request failed:', error.message);
         }
-        if ((this.responseData.above_svm_probability - this.responseData.pre_svm_probability) >= 10){
+        if ((this.responseData.final_svm_probability - this.responseData.pre_svm_probability) >= 10){
           this.$router.push("/MainResult1");
         }
         else{

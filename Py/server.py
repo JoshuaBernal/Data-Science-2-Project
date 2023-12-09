@@ -68,41 +68,42 @@ def above35_predict():
     thalach = data["thalach"]
     thal = data["thal"]
 
-    above_logreg_predictions, above_logreg_probability, above_logreg_accuracy, above_logreg_conf_matrix, above_logreg_precision, above_logreg_f1, above_logreg_recall, above_logreg_mse, above_logreg_rmse = LogisticRegAbove35(age, gender, trestbps, has_history, cp, chol, fbs, restecg, thalach, thal)
+    final_logreg_predictions, final_logreg_probability, final_logreg_accuracy, final_logreg_conf_matrix, final_logreg_precision, final_logreg_f1, final_logreg_recall, final_logreg_mse, final_logreg_rmse = LogisticRegAbove35(age, gender, trestbps, has_history, cp, chol, fbs, restecg, thalach, thal)
 
-    above_knn_predictions, above_knn_probability, above_knn_accuracy, above_knn_conf_matrix, above_knn_precision, above_knn_f1, above_knn_recall, above_knn_mse, above_knn_rmse = KNNAbove35(age, gender, trestbps, has_history, cp, chol, fbs, restecg, thalach, thal)
+    final_knn_predictions, final_knn_probability, final_knn_accuracy, final_knn_conf_matrix, final_knn_precision, final_knn_f1, final_knn_recall, final_knn_mse, final_knn_rmse = KNNAbove35(age, gender, trestbps, has_history, cp, chol, fbs, restecg, thalach, thal)
 
-    above_svm_predictions, above_svm_probability, above_svm_accuracy, above_svm_conf_matrix, above_svm_precision, above_svm_f1, above_svm_recall, above_svm_mse, above_svm_rmse = SVMAbove35(age, gender, trestbps, has_history, cp, chol, fbs, restecg, thalach, thal)
+    final_svm_predictions, final_svm_probability, final_svm_accuracy, final_svm_conf_matrix, final_svm_precision, final_svm_f1, final_svm_recall, final_svm_mse, final_svm_rmse = SVMAbove35(age, gender, trestbps, has_history, cp, chol, fbs, restecg, thalach, thal)
 
     return jsonify({
-        'above_logreg_predictions': above_logreg_predictions.tolist(), 
-        'above_logreg_probability': above_logreg_probability.tolist(),
-        'above_logreg_accuracy': above_logreg_accuracy.tolist(),
-        'above_logreg_conf_matrix': above_logreg_conf_matrix.tolist(),
-        'above_logreg_precision': above_logreg_precision.tolist(),
-        'above_logreg_f1': above_logreg_f1.tolist(), 
-        'above_logreg_recall': above_logreg_recall.tolist(), 
-        'above_logreg_mse': above_logreg_mse.tolist(), 
-        'above_logreg_rmse': above_logreg_rmse.tolist(),
-        'above_knn_predictions': above_knn_predictions.tolist(), 
-        'above_knn_probability': above_knn_probability.tolist(),
-        'above_knn_accuracy': above_knn_accuracy.tolist(),
-        'above_knn_conf_matrix': above_knn_conf_matrix.tolist(),
-        'above_knn_precision': above_knn_precision.tolist(),
-        'above_knn_f1': above_knn_f1.tolist(), 
-        'above_knn_recall': above_knn_recall.tolist(), 
-        'above_knn_mse': above_knn_mse.tolist(), 
-        'above_knn_rmse': above_knn_rmse.tolist(),
-        'above_svm_predictions': above_svm_predictions.tolist(), 
-        'above_svm_probability': above_svm_probability.tolist(),
-        'above_svm_accuracy': above_svm_accuracy.tolist(),
-        'above_svm_conf_matrix': above_svm_conf_matrix.tolist(),
-        'above_svm_precision': above_svm_precision.tolist(),
-        'above_svm_f1': above_svm_f1.tolist(), 
-        'above_svm_recall': above_svm_recall.tolist(), 
-        'above_svm_mse': above_svm_mse.tolist(), 
-        'above_svm_rmse': above_svm_rmse.tolist()
-    })
+        'final_logreg_predictions': final_logreg_predictions.tolist(), 
+        'final_logreg_probability': final_logreg_probability.tolist(),
+        'final_logreg_accuracy': final_logreg_accuracy.tolist(),
+        'final_logreg_conf_matrix': final_logreg_conf_matrix.tolist(),
+        'final_logreg_precision': final_logreg_precision.tolist(),
+        'final_logreg_f1': final_logreg_f1.tolist(), 
+        'final_logreg_recall': final_logreg_recall.tolist(), 
+        'final_logreg_mse': final_logreg_mse.tolist(), 
+        'final_logreg_rmse': final_logreg_rmse.tolist(),
+        'final_knn_predictions': final_knn_predictions.tolist(), 
+        'final_knn_probability': final_knn_probability.tolist(),
+        'final_knn_accuracy': final_knn_accuracy.tolist(),
+        'final_knn_conf_matrix': final_knn_conf_matrix.tolist(),
+        'final_knn_precision': final_knn_precision.tolist(),
+        'final_knn_f1': final_knn_f1.tolist(), 
+        'final_knn_recall': final_knn_recall.tolist(), 
+        'final_knn_mse': final_knn_mse.tolist(), 
+        'final_knn_rmse': final_knn_rmse.tolist(),
+        'final_svm_predictions': final_svm_predictions.tolist(), 
+        'final_svm_probability': final_svm_probability.tolist(),
+        'final_svm_accuracy': final_svm_accuracy.tolist(),
+        'final_svm_conf_matrix': final_svm_conf_matrix.tolist(),
+        'final_svm_precision': final_svm_precision.tolist(),
+        'final_svm_f1': final_svm_f1.tolist(), 
+        'final_svm_recall': final_svm_recall.tolist(), 
+        'final_svm_mse': final_svm_mse.tolist(), 
+        'final_svm_rmse': final_svm_rmse.tolist()
+        })
+
 
 
 @app.route("/Below35", methods=["POST"])
@@ -117,41 +118,41 @@ def below35_predict():
     fbs = data["fbs"]
     restecg = data["restecg"]
 
-    below_logreg_predictions, below_logreg_probability, below_logreg_accuracy, below_logreg_conf_matrix, below_logreg_precision, below_logreg_f1, below_logreg_recall, below_logreg_mse, below_logreg_rmse = LogisticRegBelow35(age, gender, trestbps, has_history, cp, chol, fbs, restecg)
+    final_logreg_predictions, final_logreg_probability, final_logreg_accuracy, final_logreg_conf_matrix, final_logreg_precision, final_logreg_f1, final_logreg_recall, final_logreg_mse, final_logreg_rmse = LogisticRegBelow35(age, gender, trestbps, has_history, cp, chol, fbs, restecg)
 
-    below_knn_predictions, below_knn_probability, below_knn_accuracy, below_knn_conf_matrix, below_knn_precision, below_knn_f1, below_knn_recall, below_knn_mse, below_knn_rmse = KNNBelow35(age, gender, trestbps, has_history, cp, chol, fbs, restecg)
+    final_knn_predictions, final_knn_probability, final_knn_accuracy, final_knn_conf_matrix, final_knn_precision, final_knn_f1, final_knn_recall, final_knn_mse, final_knn_rmse = KNNBelow35(age, gender, trestbps, has_history, cp, chol, fbs, restecg)
 
-    below_svm_predictions, below_svm_probability, below_svm_accuracy, below_svm_conf_matrix, below_svm_precision, below_svm_f1, below_svm_recall, below_svm_mse, below_svm_rmse = SVMBelow35(age, gender, trestbps, has_history, cp, chol, fbs, restecg)
+    final_svm_predictions, final_svm_probability, final_svm_accuracy, final_svm_conf_matrix, final_svm_precision, final_svm_f1, final_svm_recall, final_svm_mse, final_svm_rmse = SVMBelow35(age, gender, trestbps, has_history, cp, chol, fbs, restecg)
 
     return jsonify({
-        'below_logreg_predictions': below_logreg_predictions.tolist(), 
-        'below_logreg_probability': below_logreg_probability.tolist(),
-        'below_logreg_accuracy': below_logreg_accuracy.tolist(),
-        'below_logreg_conf_matrix': below_logreg_conf_matrix.tolist(),
-        'below_logreg_precision': below_logreg_precision.tolist(),
-        'below_logreg_f1': below_logreg_f1.tolist(), 
-        'below_logreg_recall': below_logreg_recall.tolist(), 
-        'below_logreg_mse': below_logreg_mse.tolist(), 
-        'below_logreg_rmse': below_logreg_rmse.tolist(),
-        'below_knn_predictions': below_knn_predictions.tolist(), 
-        'below_knn_probability': below_knn_probability.tolist(),
-        'below_knn_accuracy': below_knn_accuracy.tolist(),
-        'below_knn_conf_matrix': below_knn_conf_matrix.tolist(),
-        'below_knn_precision': below_knn_precision.tolist(),
-        'below_knn_f1': below_knn_f1.tolist(), 
-        'below_knn_recall': below_knn_recall.tolist(), 
-        'below_knn_mse': below_knn_mse.tolist(), 
-        'below_knn_rmse': below_knn_rmse.tolist(),
-        'below_svm_predictions': below_svm_predictions.tolist(), 
-        'below_svm_probability': below_svm_probability.tolist(),
-        'below_svm_accuracy': below_svm_accuracy.tolist(),
-        'below_svm_conf_matrix': below_svm_conf_matrix.tolist(),
-        'below_svm_precision': below_svm_precision.tolist(),
-        'below_svm_f1': below_svm_f1.tolist(), 
-        'below_svm_recall': below_svm_recall.tolist(), 
-        'below_svm_mse': below_svm_mse.tolist(), 
-        'below_svm_rmse': below_svm_rmse.tolist()
-    })
+        'final_logreg_predictions': final_logreg_predictions.tolist(), 
+        'final_logreg_probability': final_logreg_probability.tolist(),
+        'final_logreg_accuracy': final_logreg_accuracy.tolist(),
+        'final_logreg_conf_matrix': final_logreg_conf_matrix.tolist(),
+        'final_logreg_precision': final_logreg_precision.tolist(),
+        'final_logreg_f1': final_logreg_f1.tolist(), 
+        'final_logreg_recall': final_logreg_recall.tolist(), 
+        'final_logreg_mse': final_logreg_mse.tolist(), 
+        'final_logreg_rmse': final_logreg_rmse.tolist(),
+        'final_knn_predictions': final_knn_predictions.tolist(), 
+        'final_knn_probability': final_knn_probability.tolist(),
+        'final_knn_accuracy': final_knn_accuracy.tolist(),
+        'final_knn_conf_matrix': final_knn_conf_matrix.tolist(),
+        'final_knn_precision': final_knn_precision.tolist(),
+        'final_knn_f1': final_knn_f1.tolist(), 
+        'final_knn_recall': final_knn_recall.tolist(), 
+        'final_knn_mse': final_knn_mse.tolist(), 
+        'final_knn_rmse': final_knn_rmse.tolist(),
+        'final_svm_predictions': final_svm_predictions.tolist(), 
+        'final_svm_probability': final_svm_probability.tolist(),
+        'final_svm_accuracy': final_svm_accuracy.tolist(),
+        'final_svm_conf_matrix': final_svm_conf_matrix.tolist(),
+        'final_svm_precision': final_svm_precision.tolist(),
+        'final_svm_f1': final_svm_f1.tolist(), 
+        'final_svm_recall': final_svm_recall.tolist(), 
+        'final_svm_mse': final_svm_mse.tolist(), 
+        'final_svm_rmse': final_svm_rmse.tolist()
+        })
 
 
 if __name__ == "__main__":
