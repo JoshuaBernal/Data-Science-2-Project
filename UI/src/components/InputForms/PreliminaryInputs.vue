@@ -5,53 +5,53 @@
     </router-link>
   </MDBNavbar>
 
-  <section class="vh-100 gradient-custom">
-  <div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <h2 class="fw-bold mb-2 text-uppercase">Preliminary Information</h2>
-      <hr class="solid">
-      <h5 class="fw-regular mb-2">Enter the required preliminary information.</h5>
-      <div class="float-container">
-        <div class="float-child">
+<section class="vh-100 gradient-custom">
+<div class="container py-5 h-100">
+  <div class="row d-flex justify-content-center align-items-center h-100">
+    <h2 class="fw-bold mb-2 text-uppercase">Preliminary Information</h2>
+    <hr class="solid">
+    <h5 class="fw-regular mb-2">Enter the required preliminary information.</h5>
+    <div class="float-container">
+      <div class="float-child">
         <div class="col-12 col-md-8 col-lg-6 col-xl-12">
-                <div class="form-floating mb-3">
-                  <input type="patientno" class="form-control" id="idFloatingInput" placeholder="e.g. 29" v-model="PatientInfo.number">
-                  <label for="floatingInput">Patient No.</label>
-                </div>
-                <div class="form-floating mb-3">
-                  <input type="name" class="form-control" id="nameFloatingInput" placeholder="e.g. 29" v-model="PatientInfo.name">
-                  <label for="floatingInput">Name</label>
-                </div>
-                <div class="form-floating mb-3">
-                  <input type="age" class="form-control" id="ageFloatingInput" placeholder="e.g. 29" v-model="PrelimInfo.age">
-                  <label for="floatingInput">Age</label>
-                </div>
-                <div class="form-floating mb-3">
-                  <input type="gender" class="form-control" id="genderFloatingInput" placeholder="Male or Female" v-model="PrelimInfo.gender">
-                  <label for="floatingInput">Sex (1 for Male, 0 for Female)</label>
-                </div>
+          <div class="form-floating mb-3">
+            <input type="patientno" class="form-control" id="idFloatingInput" placeholder="e.g. 29" v-model="PatientInfo.number">
+            <label for="floatingInput">Patient No.</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="name" class="form-control" id="nameFloatingInput" placeholder="e.g. 29" v-model="PatientInfo.name">
+            <label for="floatingInput">Name</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="age" class="form-control" id="ageFloatingInput" placeholder="e.g. 29" v-model="PrelimInfo.age">
+            <label for="floatingInput">Age</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="gender" class="form-control" id="genderFloatingInput" placeholder="Male or Female" v-model="PrelimInfo.gender">
+            <label for="floatingInput">Sex (1 for Male, 0 for Female)</label>
+          </div>
         </div>        
-        </div>
-        <div class="float-child">
+      </div>
+      <div class="float-child">
         <div class="col-12 col-md-8 col-lg-6 col-xl-12">
-                <div class="form-floating mb-3">
-                  <input type="trestbps" class="form-control" id="trestbpsFloatingInput" placeholder="e.g. 145" v-model="PrelimInfo.trestbps">
-                  <label for="floatingInput">Resting Heart Rate in mm Hg</label>
-                </div>
-                <div class="form-floating mb-3">
-                  <input type="has_history" class="form-control" id="histFfloatingInput" placeholder="Yes or No" v-model="PrelimInfo.has_history">
-                  <label for="floatingInput">Has History of Heart Attack (1 for Yes, 0 for No)</label>
-                </div>
-                <div class="form-floating mb-3">
-                  <input type="cp" class="form-control" id="cpFloatingInput" placeholder="e.g. 2" v-model="PrelimInfo.cp">
-                  <label for="floatingInput">Chest Pain Type</label>
-                </div>
-                <button @click="handleSubmit" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-lg px-5" type="submit">Next</button>
+          <div class="form-floating mb-3">
+              <input type="trestbps" class="form-control" id="trestbpsFloatingInput" placeholder="e.g. 145" v-model="PrelimInfo.trestbps">
+              <label for="floatingInput">Resting Heart Rate in mm Hg</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="has_history" class="form-control" id="histFfloatingInput" placeholder="Yes or No" v-model="PrelimInfo.has_history">
+            <label for="floatingInput">Has History of Heart Attack (1 for Yes, 0 for No)</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="cp" class="form-control" id="cpFloatingInput" placeholder="e.g. 2" v-model="PrelimInfo.cp">
+            <label for="floatingInput">Chest Pain Type</label>
+          </div>
+          <button @click="handleSubmit" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-lg px-5" type="submit">Next</button>
         </div>
       </div>
-      </div>
     </div>
-    </div>
+  </div>
+</div>
 <div class="modal fade modal-lg modal-fullscreen" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -97,6 +97,8 @@
 </div>
 </section> 
 </template>
+
+
 <script>
 import { MDBNavbar } from 'mdb-vue-ui-kit';
 import axios from 'axios';

@@ -24,10 +24,10 @@ from sklearn.metrics import accuracy_score
 from itertools import combinations
 from sklearn.decomposition import PCA
 
-dataset = pd.read_csv("../CSV File/heart_attack.csv")
+dataset = pd.read_csv("assets/heart_attack.csv")
 # dataset.head()
 
-# """Logistic Regression Code"""
+# Logistic Regression Code for Preliminary Inputs
 
 def LogisticRegPre(age, gender, trestbps, has_history, cp):
     X = dataset[['age', 'gender', 'trestbps', 'has_history', 'cp']]
@@ -67,6 +67,8 @@ def LogisticRegPre(age, gender, trestbps, has_history, cp):
 
     return predictions[0], probability, accuracy, conf_matrix, precision, f1, recall, mse, rmse
 
+# Logistic Regression Code for Above 35 Probability
+
 def LogisticRegAbove35(age, gender, trestbps, has_history, cp, chol, fbs, restecg, thalach, thal):
     X = dataset[['age', 'gender', 'trestbps', 'has_history', 'cp','chol', 'fbs', 'restecg', 'thalach', 'thal']]
     y = dataset['heart_disease']
@@ -104,6 +106,8 @@ def LogisticRegAbove35(age, gender, trestbps, has_history, cp, chol, fbs, restec
     rmse = round(np.sqrt(mse),4)
 
     return predictions[0], probability, accuracy, conf_matrix, precision, f1, recall, mse, rmse
+
+# Logistic Regression Code for Below 35 Probability
 
 def LogisticRegBelow35(age, gender, trestbps, has_history, cp, chol, fbs, restecg):
     X = dataset[['age', 'gender', 'trestbps', 'has_history', 'cp','chol', 'fbs', 'restecg']]
@@ -151,7 +155,7 @@ def LogisticRegBelow35(age, gender, trestbps, has_history, cp, chol, fbs, restec
 # sns.pairplot(logregdatasetbelow, hue='heart_disease')
 # plt.show()
 
-# """K-Nearest Code"""
+# K-Nearest Code for Preliminary Inputs
 
 def KNNPre(age, gender, trestbps, has_history, cp):
     X = dataset[['age','gender','trestbps','has_history','cp']]
@@ -186,6 +190,8 @@ def KNNPre(age, gender, trestbps, has_history, cp):
 
     return predicted_class, probability, accuracy, conf_matrix, precision, f1, recall, mse, rmse  
 
+# K-Nearest Code for Above 35 Probability
+
 def KNNAbove35(age, gender, trestbps, has_history, cp, chol, fbs, restecg, thalach, thal):
     X = dataset[['age','gender','trestbps','has_history','cp','chol','fbs','restecg','thalach','thal']]
     y = dataset['heart_disease']
@@ -218,6 +224,8 @@ def KNNAbove35(age, gender, trestbps, has_history, cp, chol, fbs, restecg, thala
     rmse = round(np.sqrt(mse),4)
 
     return predicted_class, probability, accuracy, conf_matrix, precision, f1, recall, mse, rmse
+
+# K-Nearest Code for Below 35 Probability
 
 def KNNBelow35(age, gender, trestbps, has_history, cp, chol, fbs, restecg):
     X = dataset[['age','gender','trestbps','has_history','cp','chol','fbs','restecg']]
@@ -275,7 +283,7 @@ pca_2d = pca.transform(X)
 # plt.legend([c1, c2], ['No Heart Disease','With Heart Disease'])
 # plt.show()
 
-"""Support Vector Machine (SVM) Code"""
+# Support Vector Machine (SVM) Code for Preliminary Inputs
 
 def SVMPre(age, gender, trestbps, has_history, cp):
     X = dataset[['age','gender','trestbps','has_history','cp']]
@@ -318,6 +326,8 @@ def SVMPre(age, gender, trestbps, has_history, cp):
 
     return prediction[0], probability, accuracy, conf_matrix, precision, f1, recall, mse, rmse
 
+# Support Vector Machine (SVM) Code for Above 35 Probability
+
 def SVMAbove35(age, gender, trestbps, has_history, cp, chol, fbs, restecg, thalach, thal):
     X = dataset[['age','gender','trestbps','has_history','cp','chol','fbs','restecg','thalach','thal']]
     y = dataset['heart_disease']
@@ -353,7 +363,60 @@ def SVMAbove35(age, gender, trestbps, has_history, cp, chol, fbs, restecg, thala
     mse = mean_squared_error(y_test, y_pred)
     rmse = np.sqrt(mse)
 
+    feature_name = X
+    feature_names = feature_name.columns.tolist()
+
+    # Standardize the dataset
+    scaler = StandardScaler()
+    X_std = scaler.fit_transform(X)
+
+    # Create a combination of all pairs of features
+    feature_combinations = combinations(range(X.shape[1]), 2)
+
+    # SVM classifier with a linear kernel
+    svm = SVC(kernel='linear', C=1.0)
+
+    # Plotting configuration with increased figure size and label sizes
+    fig, axs = plt.subplots(5,9, figsize=(20, 15))  # Increased figure size here
+    fig.subplots_adjust(hspace=0.4, wspace=0.4)
+    axs = axs.flatten()  # To iterate over subplots easily
+
+    # Loop over combinations of features
+    for i, (feature_idx1, feature_idx2) in enumerate(feature_combinations):
+        # Prepare data for the two features
+        X_pair_std = X_std[:, [feature_idx1, feature_idx2]]
+
+        # Train SVM
+        svm.fit(X_pair_std, y)
+
+        # Create a mesh to plot the decision boundaries
+        x_min, x_max = X_pair_std[:, 0].min() - 1, X_pair_std[:, 0].max() + 1
+        y_min, y_max = X_pair_std[:, 1].min() - 1, X_pair_std[:, 1].max() + 1
+        xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.02),
+                            np.arange(y_min, y_max, 0.02))
+
+        # Plot the decision boundary
+        Z = svm.predict(np.array([xx.ravel(), yy.ravel()]).T)
+        Z = Z.reshape(xx.shape)
+
+        # Plotting the decision boundaries
+        axs[i].contourf(xx, yy, Z, alpha=0.8, cmap=plt.cm.coolwarm)
+        axs[i].scatter(X_pair_std[:, 0], X_pair_std[:, 1], c=y, s=30, edgecolor='k', cmap=plt.cm.coolwarm)
+        axs[i].set_xlabel(feature_names[feature_idx1], fontsize=14)  # Increase font size for x label
+        axs[i].set_ylabel(feature_names[feature_idx2], fontsize=14)  # Increase font size for y label
+        axs[i].tick_params(axis='both', which='major', labelsize=12)  # Increase tick label size
+        axs[i].set_title(' ', fontsize=16)  # Increase title font size
+
+    # Hide any empty subplot (in case the number of combinations is less than the subplot grid)
+    for j in range(i + 1, len(axs)):
+        axs[j].axis('off')
+
+    # Download the visualization as png
+    plt.savefig("assets/visualizations/svmVisual.png")
+
     return prediction[0], probability, accuracy, conf_matrix, precision, f1, recall, mse, rmse
+
+# Support Vector Machine (SVM) Code for Below 35 Probability
 
 def SVMBelow35(age, gender, trestbps, has_history, cp, chol, fbs, restecg):
     X = dataset[['age','gender','trestbps','has_history','cp','chol','fbs','restecg']]
@@ -390,111 +453,57 @@ def SVMBelow35(age, gender, trestbps, has_history, cp, chol, fbs, restecg):
     mse = mean_squared_error(y_test, y_pred)
     rmse = np.sqrt(mse)
 
+    feature_name = X
+    feature_names = feature_name.columns.tolist()
+
+    # Standardize the dataset
+    scaler = StandardScaler()
+    X_std = scaler.fit_transform(X)
+
+    # Create a combination of all pairs of features
+    feature_combinations = combinations(range(X.shape[1]), 2)
+
+    # SVM classifier with a linear kernel
+    svm = SVC(kernel='linear', C=1.0)
+
+    # Plotting configuration with increased figure size and label sizes
+    fig, axs = plt.subplots(5,6, figsize=(20, 15))  # Increased figure size here
+    fig.subplots_adjust(hspace=0.4, wspace=0.4)
+    axs = axs.flatten()  # To iterate over subplots easily
+
+    # Loop over combinations of features
+    for i, (feature_idx1, feature_idx2) in enumerate(feature_combinations):
+        # Prepare data for the two features
+        X_pair_std = X_std[:, [feature_idx1, feature_idx2]]
+
+        # Train SVM
+        svm.fit(X_pair_std, y)
+
+        # Create a mesh to plot the decision boundaries
+        x_min, x_max = X_pair_std[:, 0].min() - 1, X_pair_std[:, 0].max() + 1
+        y_min, y_max = X_pair_std[:, 1].min() - 1, X_pair_std[:, 1].max() + 1
+        xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.02),
+                            np.arange(y_min, y_max, 0.02))
+
+        # Plot the decision boundary
+        Z = svm.predict(np.array([xx.ravel(), yy.ravel()]).T)
+        Z = Z.reshape(xx.shape)
+
+        # Plotting the decision boundaries
+        axs[i].contourf(xx, yy, Z, alpha=0.8, cmap=plt.cm.coolwarm)
+        axs[i].scatter(X_pair_std[:, 0], X_pair_std[:, 1], c=y, s=30, edgecolor='k', cmap=plt.cm.coolwarm)
+        axs[i].set_xlabel(feature_names[feature_idx1], fontsize=14)  # Increase font size for x label
+        axs[i].set_ylabel(feature_names[feature_idx2], fontsize=14)  # Increase font size for y label
+        axs[i].tick_params(axis='both', which='major', labelsize=12)  # Increase tick label size
+        axs[i].set_title(' ', fontsize=16)  # Increase title font size
+
+    # Hide any empty subplot (in case the number of combinations is less than the subplot grid)
+    for j in range(i + 1, len(axs)):
+        axs[j].axis('off')
+
+    # Download the visualization as png
+    plt.savefig("assets/visualizations/svmVisual.png")
+
     return prediction[0], probability, accuracy, conf_matrix, precision, f1, recall, mse, rmse
 
-# X = dataset[['age','gender','trestbps','has_history','cp','chol','fbs','restecg']]
-# y = dataset['heart_disease']
-# feature_name = X
-# feature_names = feature_name.columns.tolist()
-
-# # Standardize the dataset
-# scaler = StandardScaler()
-# X_std = scaler.fit_transform(X)
-
-# # Create a combination of all pairs of features
-# feature_combinations = combinations(range(X.shape[1]), 2)
-
-# # SVM classifier with a linear kernel
-# svm = SVC(kernel='linear', C=1.0)
-
-# # Plotting configuration with increased figure size and label sizes
-# fig, axs = plt.subplots(5,6, figsize=(20, 15))  # Increased figure size here
-# fig.subplots_adjust(hspace=0.4, wspace=0.4)
-# axs = axs.flatten()  # To iterate over subplots easily
-
-# # Loop over combinations of features
-# for i, (feature_idx1, feature_idx2) in enumerate(feature_combinations):
-#     # Prepare data for the two features
-#     X_pair_std = X_std[:, [feature_idx1, feature_idx2]]
-
-#     # Train SVM
-#     svm.fit(X_pair_std, y)
-
-#     # Create a mesh to plot the decision boundaries
-#     x_min, x_max = X_pair_std[:, 0].min() - 1, X_pair_std[:, 0].max() + 1
-#     y_min, y_max = X_pair_std[:, 1].min() - 1, X_pair_std[:, 1].max() + 1
-#     xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.02),
-#                          np.arange(y_min, y_max, 0.02))
-
-#     # Plot the decision boundary
-#     Z = svm.predict(np.array([xx.ravel(), yy.ravel()]).T)
-#     Z = Z.reshape(xx.shape)
-
-#     # Plotting the decision boundaries
-#     axs[i].contourf(xx, yy, Z, alpha=0.8, cmap=plt.cm.coolwarm)
-#     axs[i].scatter(X_pair_std[:, 0], X_pair_std[:, 1], c=y, s=30, edgecolor='k', cmap=plt.cm.coolwarm)
-#     axs[i].set_xlabel(feature_names[feature_idx1], fontsize=14)  # Increase font size for x label
-#     axs[i].set_ylabel(feature_names[feature_idx2], fontsize=14)  # Increase font size for y label
-#     axs[i].tick_params(axis='both', which='major', labelsize=12)  # Increase tick label size
-#     axs[i].set_title(' ', fontsize=16)  # Increase title font size
-
-# # Hide any empty subplot (in case the number of combinations is less than the subplot grid)
-# for j in range(i + 1, len(axs)):
-#     axs[j].axis('off')
-
-# # Show the plot with a bigger size and increased label sizes
-# #plt.show()
-
-# X = dataset[['age','gender','trestbps','has_history','cp','chol','fbs','restecg','thalach','thal']]
-# y = dataset['heart_disease']
-# feature_name = X
-# feature_names = feature_name.columns.tolist()
-
-# # Standardize the dataset
-# scaler = StandardScaler()
-# X_std = scaler.fit_transform(X)
-
-# # Create a combination of all pairs of features
-# feature_combinations = combinations(range(X.shape[1]), 2)
-
-# # SVM classifier with a linear kernel
-# svm = SVC(kernel='linear', C=1.0)
-
-# # Plotting configuration with increased figure size and label sizes
-# fig, axs = plt.subplots(5,9, figsize=(20, 15))  # Increased figure size here
-# fig.subplots_adjust(hspace=0.4, wspace=0.4)
-# axs = axs.flatten()  # To iterate over subplots easily
-
-# # Loop over combinations of features
-# for i, (feature_idx1, feature_idx2) in enumerate(feature_combinations):
-#     # Prepare data for the two features
-#     X_pair_std = X_std[:, [feature_idx1, feature_idx2]]
-
-#     # Train SVM
-#     svm.fit(X_pair_std, y)
-
-#     # Create a mesh to plot the decision boundaries
-#     x_min, x_max = X_pair_std[:, 0].min() - 1, X_pair_std[:, 0].max() + 1
-#     y_min, y_max = X_pair_std[:, 1].min() - 1, X_pair_std[:, 1].max() + 1
-#     xx, yy = np.meshgrid(np.arange(x_min, x_max, 0.02),
-#                          np.arange(y_min, y_max, 0.02))
-
-#     # Plot the decision boundary
-#     Z = svm.predict(np.array([xx.ravel(), yy.ravel()]).T)
-#     Z = Z.reshape(xx.shape)
-
-#     # Plotting the decision boundaries
-#     axs[i].contourf(xx, yy, Z, alpha=0.8, cmap=plt.cm.coolwarm)
-#     axs[i].scatter(X_pair_std[:, 0], X_pair_std[:, 1], c=y, s=30, edgecolor='k', cmap=plt.cm.coolwarm)
-#     axs[i].set_xlabel(feature_names[feature_idx1], fontsize=14)  # Increase font size for x label
-#     axs[i].set_ylabel(feature_names[feature_idx2], fontsize=14)  # Increase font size for y label
-#     axs[i].tick_params(axis='both', which='major', labelsize=12)  # Increase tick label size
-#     axs[i].set_title(' ', fontsize=16)  # Increase title font size
-
-# # Hide any empty subplot (in case the number of combinations is less than the subplot grid)
-# for j in range(i + 1, len(axs)):
-#     axs[j].axis('off')
-
-# # Show the plot with a bigger size and increased label sizes
-# #plt.show()
 

@@ -1,10 +1,11 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from python_code import LogisticRegPre, KNNPre, SVMPre, LogisticRegAbove35, KNNAbove35, SVMAbove35, LogisticRegBelow35, KNNBelow35, SVMBelow35
+import os
 
 
 app = Flask(__name__)
-app.secret_key = "balls"
+app.secret_key = "corsKey934901"
 CORS(app, origins="*")
 
 
@@ -153,6 +154,22 @@ def below35_predict():
         'final_svm_mse': final_svm_mse.tolist(), 
         'final_svm_rmse': final_svm_rmse.tolist()
         })
+
+@app.route('/getImages', methods=['GET'])
+def get_images():
+    try:
+        image_names = os.listdir('assets/visualizations')
+        image_urls = [f'http://localhost:5000/sendImage/{image}' for image in image_names]
+        return jsonify({'image_urls': image_urls})
+    except Exception as e:
+        return str(e)
+
+@app.route('/sendImage/<image_name>', methods=['GET'])
+def send_image(image_name):
+    try:
+        return send_from_directory('assets/visualizations', image_name)
+    except Exception as e:
+        return str(e)
 
 
 if __name__ == "__main__":

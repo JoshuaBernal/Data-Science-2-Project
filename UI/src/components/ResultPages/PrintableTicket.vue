@@ -8,7 +8,7 @@
   <section class="vh-100">
     <aside class="container py-5 h-100">
       <aside class="row d-flex justify-content-center align-items-center h-100">
-        <h2 class="fw-bold mb-2 text-uppercase">Patient Information Ticket</h2>
+        <h2 class="fw-bold mb-2 text-uppercase">Detailed Patient Information Page</h2>
         <hr class="solid">
         <div class="print-area">
           <h5 class="fw-bold">Patient Information</h5>
@@ -18,14 +18,14 @@
           <br>
           <h5 class="fw-bold">Test Results</h5>
           <p class="ticketInfo">Prediction Model Used: Support Vector Machine (SVM)</p>
-          <p class="ticketInfo" v-if="responseData.final_svm_predictions == '1'">Prediction: HIGH CHANCE of CVD</p>
-          <p class="ticketInfo" v-else-if="responseData.final_svm_predictions == '0'">Prediction: Low chance of CVD</p>
+          <p class="ticketInfo" v-if="responseData.final_svm_predictions == '1'">Findings: HIGH CHANCE of CVD</p>
+          <p class="ticketInfo" v-else-if="responseData.final_svm_predictions == '0'">Findings: Low chance of CVD</p>
           <p class="ticketInfo">Probability of CVD: {{ responseData.final_svm_probability }}%</p>
           <p class="ticketInfo">Accuracy of prediction: {{ responseData.final_svm_accuracy }}%</p>
           <br>
           <h5 class="fw-bold">Recommendations</h5>
           <p class="ticketInfo" v-if="responseData.final_svm_predictions == '1'">Admit the patient for confinement for further specialist checking.</p>
-          <p class="ticketInfo" v-if="responseData.final_svm_predictions == '0'">Admit the patient to the emergency room for further investigation of symptoms.</p>
+          <p class="ticketInfo" v-else-if="responseData.final_svm_predictions == '0'">Admit the patient to the emergency room for further investigation of symptoms.</p>
         </div>
         <div class="col-12 col-md-8 col-lg-6 col-xl-12">
           <button id="print" @click="printPage" class="btn form-floating btn-lg px-5" type="button">Print Ticket</button>

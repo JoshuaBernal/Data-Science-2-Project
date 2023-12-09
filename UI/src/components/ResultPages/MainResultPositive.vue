@@ -26,7 +26,7 @@
         </div>
         <div class="col-12 col-md-8 col-lg-6 col-xl-12">
         <div class="float-child">
-            <button @click="goToTicketPage" class="btn form-floating btn-lg px-5" type="navigate">View Printable Ticket</button>
+            <button @click="goToTicketPage" class="btn form-floating btn-lg px-5" type="navigate">View Patient Ticket</button>
         </div>
       </div>
       </div>

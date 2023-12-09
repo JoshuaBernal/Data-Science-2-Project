@@ -5,22 +5,24 @@
     </router-link>
   </MDBNavbar>
 
-  <section class="vh-100 gradient-custom">
+<section class="vh-100 gradient-custom">
   <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
       <h2 class="fw-bold mb-2 text-uppercase">Visualization Report</h2>
       <hr class="solid">
-      <h5 class="fw-regular mb-2">SVM Visualization goes here.</h5>
+      <div v-for="(url, index) in imageUrls" :key="index" class="crop">
+        <img :src="url" alt="Image" class="img-fluid img-thumbnail rounded mx-auto d-block"/>
+      </div>
       <div class="float-container">
         <div class="float-child">
+          <div class="col-12 col-md-8 col-lg-6 col-xl-12">
+            <button @click="goToTicket" class="btn form-floating btn-lg px-5" type="navigate">View Detailed Report</button>
+          </div>
+        </div>
         <div class="col-12 col-md-8 col-lg-6 col-xl-12">
-            <button @click="goToTicket" class="btn form-floating btn-lg px-5" type="navigate">View Patient Ticket</button>
-        </div>
-        </div>
-        <div class="col-12 col-md-8 col-lg-6 col-xl-12">
-        <div class="float-child">
-            <button @click="startOver" class="btn form-floating btn-lg px-5" type="navigate">+ New Patient</button>
-        </div>
+          <div class="float-child">
+              <button @click="startOver" class="btn form-floating btn-lg px-5" type="navigate">+ New Patient</button>
+          </div>
         </div>
       </div>
     </div>
@@ -29,12 +31,18 @@
 </template>
 <script>
   //import { ref, onMounted } from "vue";
+  import axios from 'axios'
   import { MDBNavbar } from 'mdb-vue-ui-kit';
   //import { useRouter } from 'vue-router';
 
   export default {
     components: {
       MDBNavbar
+    },
+    data() {
+      return {
+        imageUrls: []
+      }
     },
     methods: {
     startOver() {
@@ -45,6 +53,19 @@
       this.$router.push("/PrintableTicket")
     }
   },
+  mounted() {
+    try {
+    axios.get('http://127.0.0.1:5000/getImages')
+      .then(response => {
+        this.imageUrls = response.data.image_urls;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  } catch (error) {
+    console.error(error);
+  }
+  }
 };
 </script>
 
@@ -79,5 +100,10 @@
 }
 hr.solid {
   border-top: 3px solid #000000;
+}
+.crop img {
+  flex-shrink: 0;
+  min-width: 100%;
+  min-height: 100%;
 }
 </style>
